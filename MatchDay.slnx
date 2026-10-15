@@ -3,6 +3,7 @@
     <Project Path="src/MatchDay.AppHost/MatchDay.AppHost.csproj" />
     <Project Path="src/MatchDay.Booking.Api/MatchDay.Booking.Api.csproj" />
     <Project Path="src/MatchDay.Catalog.Api/MatchDay.Catalog.Api.csproj" />
+    <Project Path="src/MatchDay.Messaging/MatchDay.Messaging.csproj" />
     <Project Path="src/MatchDay.ServiceDefaults/MatchDay.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/tests/">
