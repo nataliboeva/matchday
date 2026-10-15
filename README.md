@@ -2,7 +2,7 @@
 
 # MatchDay
 
-**Cloud-native football ticketing on .NET Aspire: hold seats, book them exactly once, and follow every booking from HTTP request to e-ticket in a single trace.**
+**Cloud-native football ticketing on .NET Aspire: hold seats without collisions, never sell a seat twice, and follow every booking from HTTP request to e-ticket in a single trace.**
 
 [![CI](https://github.com/nataliboeva/matchday/actions/workflows/ci.yml/badge.svg)](https://github.com/nataliboeva/matchday/actions/workflows/ci.yml)
 ![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)
@@ -22,7 +22,7 @@ fictional (2026/27 season of an imaginary Bulgarian league); prices are in euro.
 
 - **Seat holds that can't collide.** Up to 6 seats are held in Redis for 10 minutes. A Lua script checks and
   locks all seats in one atomic step, so two fans clicking the same seat at the same moment can't both get it.
-- **Bookings that happen exactly once.** Confirming a hold requires an `Idempotency-Key` header. Retries return
+- **Bookings that are safe to retry.** Confirming a hold requires an `Idempotency-Key` header. Retries return
   the original booking, and unique indexes in PostgreSQL are the final guard against double-selling.
 - **Prices locked at hold time.** The booking service fetches price and seat layout from the catalog through
   Aspire service discovery, with retries, timeouts and a circuit breaker from the standard resilience handler.
