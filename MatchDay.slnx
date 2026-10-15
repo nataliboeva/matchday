@@ -5,4 +5,7 @@
     <Project Path="src/MatchDay.Catalog.Api/MatchDay.Catalog.Api.csproj" />
     <Project Path="src/MatchDay.ServiceDefaults/MatchDay.ServiceDefaults.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MatchDay.UnitTests/MatchDay.UnitTests.csproj" />
+  </Folder>
 </Solution>
