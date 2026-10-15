@@ -8,4 +8,12 @@
     <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MatchDay.Catalog.Api\MatchDay.Catalog.Api.csproj" />
+  </ItemGroup>
+
 </Project>
