@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\MatchDay.Booking.Api\MatchDay.Booking.Api.csproj" />
+    <ProjectReference Include="..\..\src\MatchDay.Messaging\MatchDay.Messaging.csproj" />
   </ItemGroup>
 
   <ItemGroup>
