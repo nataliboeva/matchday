@@ -1,2 +1,6 @@
 <Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MatchDay.AppHost/MatchDay.AppHost.csproj" />
+    <Project Path="src/MatchDay.ServiceDefaults/MatchDay.ServiceDefaults.csproj" />
+  </Folder>
 </Solution>
