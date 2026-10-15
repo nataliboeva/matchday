@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
+    <ProjectReference Include="..\MatchDay.Messaging\MatchDay.Messaging.csproj" />
     <ProjectReference Include="..\MatchDay.ServiceDefaults\MatchDay.ServiceDefaults.csproj" />
   </ItemGroup>
 

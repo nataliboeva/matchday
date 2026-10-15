@@ -12,10 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 builder.AddNpgsqlDbContext<BookingDbContext>("bookingdb");
 builder.AddRedisClient("redis");
+builder.AddRabbitMqMessaging("messaging");
 
 builder.Services.AddHttpClient<CatalogClient>(client => client.BaseAddress = new Uri("https+http://catalog-api"));
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<ISeatHoldStore, RedisSeatHoldStore>();
+builder.Services.AddSingleton<BookingMetrics>();
 builder.Services.AddScoped<BookingService>();
 
 builder.Services.AddProblemDetails();

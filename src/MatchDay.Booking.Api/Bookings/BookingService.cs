@@ -1,6 +1,7 @@
 using MatchDay.Booking.Api.Data;
 using MatchDay.Booking.Api.Domain;
 using MatchDay.Booking.Api.Holds;
+using MatchDay.Messaging;
 using Microsoft.EntityFrameworkCore;
 
 namespace MatchDay.Booking.Api.Bookings;
@@ -21,10 +22,13 @@ public sealed record ConfirmResult(ConfirmOutcome Outcome, TicketBooking? Bookin
 /// Turns a seat hold into a stored booking. Safe to retry: the same idempotency key always returns
 /// the booking created by the first successful attempt.
 /// </summary>
-public sealed class BookingService(
+public sealed partial class BookingService(
     BookingDbContext db,
     ISeatHoldStore holdStore,
-    TimeProvider timeProvider)
+    IMessagePublisher publisher,
+    BookingMetrics metrics,
+    TimeProvider timeProvider,
+    ILogger<BookingService> logger)
 {
     public async Task<ConfirmResult> ConfirmAsync(Guid holdId, string idempotencyKey, CancellationToken cancellationToken)
     {
@@ -62,10 +66,28 @@ public sealed class BookingService(
             return new ConfirmResult(ConfirmOutcome.SeatsAlreadySold);
         }
 
+        LogBookingConfirmed(booking.Id, booking.Seats.Count, booking.Section.MatchTitle);
+        metrics.RecordTicketsSold(booking);
+
         // The seats are now sold in PostgreSQL, so the Redis locks are no longer needed.
         await holdStore.ReleaseAsync(hold, cancellationToken);
+        await PublishConfirmationAsync(booking, cancellationToken);
 
         return new ConfirmResult(ConfirmOutcome.Created, booking);
+    }
+
+    private async Task PublishConfirmationAsync(TicketBooking booking, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await publisher.PublishAsync(booking.ToBookingConfirmed(), cancellationToken);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            // The booking is already stored, so the customer keeps their seats; only the e-ticket is delayed.
+            // A transactional outbox would make this reliable - see the roadmap in the README.
+            LogPublishFailed(ex, booking.Id);
+        }
     }
 
     private Task<TicketBooking?> FindByIdempotencyKeyAsync(string idempotencyKey, CancellationToken cancellationToken) =>
@@ -75,4 +97,10 @@ public sealed class BookingService(
         previous.HoldId == holdId
             ? new ConfirmResult(ConfirmOutcome.Replayed, previous)
             : new ConfirmResult(ConfirmOutcome.IdempotencyKeyReused);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Booking {BookingId} confirmed: {SeatCount} seat(s) for {Match}")]
+    private partial void LogBookingConfirmed(Guid bookingId, int seatCount, string match);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Booking {BookingId} was stored but its BookingConfirmed event could not be published")]
+    private partial void LogPublishFailed(Exception exception, Guid bookingId);
 }
