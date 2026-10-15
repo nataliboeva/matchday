@@ -1,0 +1,10 @@
+@CatalogApi = http://localhost:5101
+
+### List fixtures
+GET {{CatalogApi}}/matches
+
+### Fixture details with sections and prices
+GET {{CatalogApi}}/matches/1
+
+### Price and layout of one section (what the booking service calls)
+GET {{CatalogApi}}/matches/1/sections/3
