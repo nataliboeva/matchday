@@ -10,9 +10,11 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.Redis" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MatchDay.Booking.Api\MatchDay.Booking.Api.csproj" />
     <ProjectReference Include="..\MatchDay.Catalog.Api\MatchDay.Catalog.Api.csproj" />
   </ItemGroup>
 
