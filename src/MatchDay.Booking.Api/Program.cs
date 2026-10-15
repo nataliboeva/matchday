@@ -4,7 +4,6 @@ using MatchDay.Booking.Api.Catalog;
 using MatchDay.Booking.Api.Data;
 using MatchDay.Booking.Api.ErrorHandling;
 using MatchDay.Booking.Api.Holds;
-using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,11 +41,5 @@ app.MapHoldEndpoints();
 app.MapBookingEndpoints();
 app.MapDefaultEndpoints();
 
-// Migrating on startup keeps the demo self-contained (see "Design decisions" in the README).
-await using (var scope = app.Services.CreateAsyncScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<BookingDbContext>();
-    await db.Database.MigrateAsync();
-}
-
+await app.MigrateDatabaseAsync<BookingDbContext>();
 await app.RunAsync();

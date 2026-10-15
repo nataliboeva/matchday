@@ -7,7 +7,7 @@ namespace MatchDay.IntegrationTests;
 internal static class DockerAvailability
 {
     public const string SkipReason =
-        "Docker is not running. These tests start PostgreSQL, Redis and RabbitMQ containers - start Docker and run them again.";
+        "Docker isn't available. These tests start PostgreSQL, Redis and RabbitMQ containers - start Docker and run them again.";
 
     public static bool IsAvailable { get; } = Check();
 
