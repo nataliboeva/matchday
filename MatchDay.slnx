@@ -8,6 +8,7 @@
     <Project Path="src/MatchDay.ServiceDefaults/MatchDay.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/MatchDay.IntegrationTests/MatchDay.IntegrationTests.csproj" />
     <Project Path="tests/MatchDay.UnitTests/MatchDay.UnitTests.csproj" />
   </Folder>
 </Solution>
