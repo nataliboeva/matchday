@@ -1,4 +1,5 @@
 using MatchDay.Booking.Api.Catalog;
+using MatchDay.Booking.Api.Data;
 using MatchDay.Booking.Api.Domain;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -33,6 +34,7 @@ public static class HoldEndpoints
     private static async Task<Results<Created<HoldResponse>, ValidationProblem, ProblemHttpResult>> HoldSeats(
         HoldSeatsRequest request,
         CatalogClient catalog,
+        BookingDbContext db,
         ISeatHoldStore holdStore,
         TimeProvider timeProvider,
         CancellationToken cancellationToken)
@@ -56,6 +58,15 @@ public static class HoldEndpoints
         if (unknownSeats.Count > 0)
         {
             return SeatsValidationProblem($"{offer.SectionName} has no {string.Join("; ", unknownSeats)}.");
+        }
+
+        var soldSeats = await db.FindSoldSeatsAsync(offer.MatchId, offer.SectionId, seats, cancellationToken);
+        if (soldSeats.Count > 0)
+        {
+            return TypedResults.Problem(
+                statusCode: StatusCodes.Status409Conflict,
+                title: "Seats are already sold.",
+                detail: $"Already sold: {string.Join("; ", soldSeats)}. Please pick different seats.");
         }
 
         var hold = SeatHold.Create(

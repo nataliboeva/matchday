@@ -1,0 +1,32 @@
+@BookingApi = http://localhost:5102
+
+### 1. Hold two seats in the Main Tribune for the opening fixture (valid for 10 minutes)
+# @name hold
+POST {{BookingApi}}/holds
+Content-Type: application/json
+
+{
+  "matchId": 1,
+  "sectionId": 3,
+  "customerEmail": "fan@example.com",
+  "seats": [
+    { "row": 5, "number": 12 },
+    { "row": 5, "number": 13 }
+  ]
+}
+
+### 2. Confirm the hold. Re-sending with the same Idempotency-Key returns the same booking.
+# @name booking
+POST {{BookingApi}}/bookings
+Content-Type: application/json
+Idempotency-Key: 6a1f0c2e-5d1b-4a63-9a3e-0d4b7f6c2b11
+
+{
+  "holdId": "{{hold.response.body.$.holdId}}"
+}
+
+### 3. Look the booking up
+GET {{BookingApi}}/bookings/{{booking.response.body.$.id}}
+
+### 4. Cancel it (only possible before kick-off)
+POST {{BookingApi}}/bookings/{{booking.response.body.$.id}}/cancel

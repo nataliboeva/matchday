@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <!-- Keep in sync with the Aspire.AppHost.Sdk version in MatchDay.AppHost.csproj -->
     <AspireVersion>13.6.1</AspireVersion>
   </PropertyGroup>
@@ -21,6 +22,8 @@
   <ItemGroup Label="ASP.NET Core and EF Core">
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.13" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.13" />
+    <!-- Pinned (transitively) so every project runs the same EF Core as the Design package. -->
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.13" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.18.0" />
   </ItemGroup>
 
