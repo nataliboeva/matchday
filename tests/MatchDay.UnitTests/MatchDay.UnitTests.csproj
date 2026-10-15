@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="Shouldly" />
     <PackageReference Include="xunit.v3" />
   </ItemGroup>
@@ -14,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\MatchDay.Booking.Api\MatchDay.Booking.Api.csproj" />
     <ProjectReference Include="..\..\src\MatchDay.Messaging\MatchDay.Messaging.csproj" />
+    <ProjectReference Include="..\..\src\MatchDay.Notifications.Worker\MatchDay.Notifications.Worker.csproj" />
   </ItemGroup>
 
   <ItemGroup>
